@@ -10,21 +10,20 @@ dataset = pd.read_csv(./NSL−KDD/KDDTrain +.txt , header=None)
 X = dataset.iloc[:, 0:−2].values
 label_column = dataset.iloc[:, −2].values
 y = []
-for i in range(len( label column )):
-    if label column [i] == 'normal':
-        y.append (0)
+for i in range(len( label_column )):
+    if label_column[i] == 'normal':
+        y.append(0)
     else:
-        y.append (1)
+        y.append(1)
 # Conver t i−s t t o a r r ay
 y = np.array(y)
 
 
 
-from sklearn. preprocessing import OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
-ct = ColumnTransformer (
+ct = ColumnTransformer(
 # The column numbers t o be t r an s f o rme d ( [ 1 , 2 , 3 ] r e p r e s e n t s t h r e e columns t o be t r a n s f e r r e d )
-
 [('one_hot_encoder ', OneHotEncoder(), [1 ,2 ,3])],
 # Leave t h e r e s t o f t h e columns un touched
 remainder ='passthrough'
@@ -51,7 +50,7 @@ from keras.layers import Dense
 classifier = Sequential()
 
 classifier.add(Dense(units = 6, kernel_initializer = 'uniform',
-activation = 'relu', input_dim = len( X_train [0])))
+activation = 'relu', input_dim = len( X_train[0])))
 # Adding t h e second h i d den l a y e r , 6 nodes
 classifier.add(Dense(units = 6, kernel_initializer = 'uniform',
 activation = 'relu'))
@@ -66,22 +65,22 @@ activation = 'sigmoid'))
 classifier.compile( optimizer = 'adam', loss = 'binary_crossentropy',metrics = ['accuracy'])
 # run t r a i n i n g w i t h b a t c h s i z e e q u a l s t o 10 and 10 e p oc h s w i l l be
 #per formed
-classifierHistory = classifier.fit( X_train , y_train , batch size = 10,epochs = 10)
+classifierHistory = classifier.fit( X_train , y_train , batch_size = 10,epochs = 10)
 
 loss , accuracy = classifier.evaluate( X_train , y_train )
 print('Print the loss and the accuracy of the model on the dataset')
-print('Loss [0 ,1]: %.4f' % (loss), 'Accuracy [0 ,1]: %.4f' % ( accuracy ))
+print('Loss [0 ,1]: %.4f' % (loss), 'Accuracy [0 ,1]: %.4f' % (accuracy))
 
 
 # u s i n g t h e t r a i n e d model t o p r e d i c t t h e Tes t d a t a s e t r e s u l t s
-y_pred = classifier.predict( X_test )
+y_pred = classifier.predict(X_test)
 # y p r e d e q u a l s t o 0 i f t h e p r e d i c t i o n i s l e s s than 0 . 9 or e q u a l t o
 #0 . 9 ,
 # y p r e d e q u a l s t o 1 i f t h e p r e d i c a t i o n i s g r e a t e r than 0 . 9
 y_pred = (y_pred > 0.9)
 
 
-from sklearn.metrics import confusion matrix
+from sklearn.metrics import confusion_matrix
 cm = confusion_matrix ( y_test , y_pred )
 
 print('Print the Confusion Matrix:')
