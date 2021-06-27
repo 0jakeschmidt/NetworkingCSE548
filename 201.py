@@ -6,9 +6,9 @@ import numpy as np
 
 
 
-dataset = pd.read_csv(./NSL−KDD/KDDTrain +.txt , header=None)
-X = dataset.iloc[:, 0:−2].values
-label_column = dataset.iloc[:, −2].values
+dataset = pd.read_csv('NSL-KDD/KDDTrain+.txt , header=None)
+X = dataset.iloc[:, 0:-2].values
+label_column = dataset.iloc[:, -2].values
 y = []
 for i in range(len( label_column )):
     if label_column[i] == 'normal':
