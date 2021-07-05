@@ -4,7 +4,11 @@ Created on Mon Apr 15 19:43:04 2019
 Updated on Wed Jan 29 10:18:09 2020
 @author: created by Sowmya Myneni and updated by Dijiang Huang
 """
-
+"""
+Updated on June 28, 2021
+@author:Jacob Schmidt
+Made adjustments for the training and testing input values.
+"""
 ########################################
 # Part 1 - Data Pre-Processing
 #######################################
@@ -34,57 +38,15 @@ NumEpoch=10
 # The file can be a .txt as well. 
 # If the dataset file has header, then keep header=0 otherwise use header=none
 # reference: https://www.shanelynn.ie/select-pandas-dataframe-rows-and-columns-using-iloc-loc-and-ix/
-dataset = pd.read_csv(TrainingDataPath+TrainingData, header=None)
-X = dataset.iloc[:, 0:-2].values
-label_column = dataset.iloc[:, -2].values
-y = []
-for i in range(len(label_column)):
-    if label_column[i] == 'normal':
-        y.append(0)
-    else:
-        y.append(1)
-
-# Convert ist to array
-y = np.array(y)
-print('Size of training data = ',len(y))
-#####################################################TESTING data
-testingDataSet = pd.read_csv(TestingDataPath+TestingData, header=None)
-A = testingDataSet.iloc[:, 0:-2].values
-label_column_test = testingDataSet.iloc[:, -2].values
-b = []
-for i in range(len(label_column_test)):
-    if label_column_test[i] == 'normal':
-        b.append(0)
-    else:
-        b.append(1)
-
-# Convert ist to array
-b = np.array(b)
-print('Size of testing data = ',len(b))
 
 
 
 import data_preprocessor as dp
-X_train, y_train = dp.get_processed_data(TrainingData, 'categoryMappings0/', classType ='binary')
-
-print('XTRAIN---',X_train)
-print('Ytrain -----', y_train)
-
-X_test, y_test = dp.get_processed_data(TestingData, 'categoryMappings0/', classType ='binary')
-print('------test-------')
-print('Xtest-----',X_test)
-print('Ytest -----', y_test)
+X_train, y_train = dp.get_processed_data(TrainingData, 'categoryMappings/', classType ='binary')
 
 
-print('made it passed the proccessed data')
-print('----------sizes---------')
-print('X_train shape = ',X_train.shape)
-print('X_test shape = ',X_test.shape)
-print('y_train shape = ',y_train.shape)
-print('y_test shape = ',y_test.shape)
-tupleOfInts = [-1,X_train.shape[1]]
-print('tuple of ints : ',tupleOfInts)
-#X_test = np.reshape(X_test,tupleOfInts)
+X_test, y_test = dp.get_processed_data(TestingData, 'categoryMappings/', classType ='binary')
+
 
 # Encoding categorical data (convert letters/words in numbers)
 # Reference: https://medium.com/@contactsunny/label-encoder-vs-one-hot-encoder-in-machine-learning-3fc273365621
@@ -99,8 +61,8 @@ onehotencoder = OneHotEncoder(categorical_features = [1, 2, 3])
 X = onehotencoder.fit_transform(X).toarray()
 '''
 # The following code work Python 3.7 or newer
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.compose import ColumnTransformer
+#from sklearn.preprocessing import OneHotEncoder
+#from sklearn.compose import ColumnTransformer
 #ct = ColumnTransformer(
 #    [('one_hot_encoder', OneHotEncoder(), [1,2,3])],    # The column numbers to be transformed ([1, 2, 3] represents three columns to be transferred)
 #    remainder='passthrough'                         # Leave the rest of the columns untouched
@@ -109,7 +71,7 @@ from sklearn.compose import ColumnTransformer
 
 # Splitting the dataset into the Training set and Test set (75% of data are used for training)
 # reference: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html
-from sklearn.model_selection import train_test_split
+#from sklearn.model_selection import train_test_split
 #X_train, X_test, y_train, y_test = train_test_split(X, b, test_size = 1.0,train_size = 1.0, random_state = 0)
 
 
@@ -139,7 +101,7 @@ classifier = Sequential()
 # Adding the input layer and the first hidden layer, 6 nodes, input_dim specifies the number of variables
 # rectified linear unit activation function relu, reference: https://machinelearningmastery.com/rectified-linear-activation-function-for-deep-learning-neural-networks/
 classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu', input_dim = len(X_train[0])))
-print ('The coveted data: ',len(X_train[0]))
+
 #classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu', input_dim = 122))
 #print ('The coveted data: ',X_train[0])
 
@@ -172,9 +134,6 @@ print('Loss [0,1]: %.4f' % (loss), 'Accuracy [0,1]: %.4f' % (accuracy))
 ########################################
 # Part 3 - Making predictions and evaluating the model
 #######################################
-
-print('shape : x_test; ', X_test.shape)
-#print(X_test.__dict__)
 
 # Predicting the Test set results
 y_pred = classifier.predict(X_test)
